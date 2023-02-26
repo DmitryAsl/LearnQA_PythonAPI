@@ -85,7 +85,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_status_code(response, 400)
         assert response.content.decode("utf-8") == f"The value of 'username' field is too short"
 
-    def test_create_user_with_longest_usertname(self):
+    def test_create_user_with_longest_username(self):
         username = '251_chapters_of_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_userna'
         data = {
             'username': username,
