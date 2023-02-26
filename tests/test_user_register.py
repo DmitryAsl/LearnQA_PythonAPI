@@ -2,7 +2,7 @@ import pytest
 import requests
 from lib.BaseCase import BaseCase
 from lib.assertions import Assertions
-from datetime import datetime
+
 
 class TestUserRegister(BaseCase):
     fields = [
@@ -13,20 +13,8 @@ class TestUserRegister(BaseCase):
         ({'username': 'learnqa', 'firstName': 'learnqa', 'lastName': 'learnqa', 'email': "test@example.com"})
     ]
 
-    def setup_method(self):
-        base_part = "learnqa"
-        domain = "example.com"
-        random_part = datetime.now().strftime("%m%d%Y%H%M%S")
-        self.email = f"{base_part}{random_part}@{domain}"
-
     def test_create_user_successfull(self):
-        data = {
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': self.email,
-            'password': '1234'
-        }
+        data = self.prepare_registration_data()
 
         response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
 
@@ -35,13 +23,7 @@ class TestUserRegister(BaseCase):
 
     def test_create_user_with_existing_email(self):
         email = 'vinkotov@example.com'
-        data = {
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': email,
-            'password': '1234'
-        }
+        data = self.prepare_registration_data(email=email)
 
         response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
 
@@ -50,13 +32,7 @@ class TestUserRegister(BaseCase):
 
     def test_create_user_with_incorrect_email(self):
         email = 'testexample.com'
-        data = {
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': email,
-            'password': '1234'
-        }
+        data = self.prepare_registration_data(email=email)
 
         response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
 
@@ -71,13 +47,7 @@ class TestUserRegister(BaseCase):
         assert "The following required params are missed:" in response.content.decode("utf-8"), f"Unexpected response content: {response.content}"
 
     def test_create_user_with_short_username(self):
-        data = {
-            'username': 'I',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': self.email,
-            'password': '1234'
-        }
+        data = self.prepare_registration_data(username='I')
 
         response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
 
@@ -86,13 +56,7 @@ class TestUserRegister(BaseCase):
 
     def test_create_user_with_longest_username(self):
         username = '251_chapters_of_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_username_long_userna'
-        data = {
-            'username': username,
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': self.email,
-            'password': '1234'
-        }
+        data = self.prepare_registration_data(username=username)
 
         response = requests.post("https://playground.learnqa.ru/api/user/", data=data)
 
