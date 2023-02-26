@@ -3,7 +3,6 @@ import requests
 from lib.BaseCase import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
-import random
 
 class TestUserRegister(BaseCase):
     fields = [
