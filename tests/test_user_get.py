@@ -2,7 +2,9 @@ import pytest
 from lib.BaseCase import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
+import allure
 
+@allure.epic("Get user information")
 class TestUserGet(BaseCase):
     unexpected_fields = ['email', 'firstName', 'lastName']
     expected_fields = ['username', 'email', 'firstName', 'lastName']
@@ -11,6 +13,9 @@ class TestUserGet(BaseCase):
         'password': '1234'
     }
 
+    @allure.feature("get_info")
+    @allure.tag("major")
+    @allure.description("This test checking attributes returned without auth")
     def test_get_user_details_not_auth(self):
         response = MyRequests.get("user/2")
 
@@ -18,6 +23,9 @@ class TestUserGet(BaseCase):
         Assertions.assert_json_has_key(response, "username")
         Assertions.assert_json_has_no_keys(response, self.unexpected_fields)
 
+    @allure.feature("get_info")
+    @allure.tag("major")
+    @allure.description("This test checking attributes returned with auth")
     def test_get_user_details_auth_as_some_user(self):
         response1 = MyRequests.post("user/login", data=self.data)
 
@@ -33,6 +41,9 @@ class TestUserGet(BaseCase):
 
         Assertions.assert_json_has_keys(response2, self.expected_fields)
 
+    @allure.feature("get_info")
+    @allure.tag("major")
+    @allure.description("This test checking attributes returned with auth another user")
     def test_get_user_details_auth_as_other_user(self):
 
         response1 = MyRequests.post("user/login", data=self.data)

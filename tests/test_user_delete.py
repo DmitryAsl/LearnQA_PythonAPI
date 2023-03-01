@@ -2,8 +2,14 @@ import pytest
 from lib.BaseCase import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
+import allure
 
+@allure.epic("Delete user cases")
 class TestUserDelete(BaseCase):
+
+    @allure.feature("delete")
+    @allure.tag("major")
+    @allure.description("This test check not delete reserved user")
     def test_delete_reserved_user(self):
         login_data = {
             'email': 'vinkotov@example.com',
@@ -33,6 +39,9 @@ class TestUserDelete(BaseCase):
         Assertions.assert_status_code(response_check, 200)
         Assertions.assert_json_has_key(response_check, "username")
 
+    @allure.feature("delete")
+    @allure.tag("major")
+    @allure.description("This test check successfully delete created user")
     def test_delete_just_created_user(self):
         # create_user
         data = self.prepare_registration_data()
@@ -71,6 +80,9 @@ class TestUserDelete(BaseCase):
         Assertions.assert_status_code(response_check, 404)
         assert response_check.content.decode("utf-8") == f"User not found", f"Unexpected response content: {response_del.content}"
 
+    @allure.feature("delete")
+    @allure.tag("major")
+    @allure.description("This test check not delete authorized user under another")
     def test_delete_auth_with_other_user(self):
         data1 = self.prepare_registration_data()
 

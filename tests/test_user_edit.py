@@ -3,8 +3,14 @@ from lib.BaseCase import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
 from lib.my_requests import MyRequests
+import allure
 
+@allure.epic("Changing the user")
 class TestUserEdit(BaseCase):
+
+    @allure.feature("change")
+    @allure.tag("major")
+    @allure.description("This test check successfuly changed user")
     def test_edit_just_created_user(self):
         # register
         data = self.prepare_registration_data()
@@ -54,6 +60,9 @@ class TestUserEdit(BaseCase):
             f"Value of firstName is incorrect after edit"
         )
 
+    @allure.feature("change")
+    @allure.tag("major")
+    @allure.description("This test check not changed user without auth")
     def test_edit_some_user_no_auth(self):
         user_id = 63453
         response1 = MyRequests.get(f"user/{user_id}")
@@ -76,6 +85,9 @@ class TestUserEdit(BaseCase):
         Assertions.assert_json_value_by_name(response3, "username", username,
                                              f"Username was changed. This is the fail")
 
+    @allure.feature("change")
+    @allure.tag("major")
+    @allure.description("This test check not changed authorized user under another")
     def test_edit_some_user_auth_another_user(self):
         data = {
             'email': 'dmitry_test@example.com',
@@ -119,6 +131,9 @@ class TestUserEdit(BaseCase):
         Assertions.assert_json_value_by_name(response_get_auth_user, "username", username_auth_user,
                                              f"Username was changed. This is fail")
 
+    @allure.feature("change")
+    @allure.tag("major")
+    @allure.description("This test check not changed with uncorrect email")
     def test_edit_auth_user_with_incorrect_email(self):
         # register
         data = self.prepare_registration_data()
@@ -156,6 +171,9 @@ class TestUserEdit(BaseCase):
         Assertions.assert_status_code(response3, 400)
         assert response3.content.decode("utf-8") == f"Invalid email format", f"Unexpected response content: {response3.content}"
 
+    @allure.feature("change")
+    @allure.tag("major")
+    @allure.description("This test check not changed with with short firstName")
     def test_edit_auth_user_with_short_firstName(self):
         # register
         data = self.prepare_registration_data()
